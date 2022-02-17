@@ -3,16 +3,24 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <regex>
 
 using namespace std;
+
 class WebTemplate {
-   map<string,string> dictionary; // dictionary["who"]="bob"
-   string component;  /// ex <p>hello ${who}</p>
-   string translate() const {
+   public: map<string,string> dictionary; // dictionary["who"]="bob"
+   public: string component;  /// ex <p>hello ${who}</p>
+   public: string substitute(string in, string from, string to) const {
+       return  regex_replace( in,regex( from ), to);
+   }
+   public: string translate() const {
+       string ans = component;
+       for (auto keyValue : dictionary) {
+           auto key = keyValue.first;
+           auto value = keyValue.second;
+           ans = substitute(ans, "${" + key + "}",value);
+       }
        return "";
-
-     
-
    }
 };
 
