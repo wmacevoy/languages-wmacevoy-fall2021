@@ -7,11 +7,19 @@
 
 using namespace std;
 
+// const x = { "a" : 4, "b" : 7 };
+// x = { "a" : 7, "b" : 3 }; // illegal in js.
+// x["a"] =333;
 class WebTemplate {
    public: map<string,string> dictionary; // dictionary["who"]="bob"
    public: string component;  /// ex <p>hello ${who}</p>
    public: string substitute(string in, string from, string to) const {
-       return  regex_replace( in,regex( from ), to);
+       const regex pattern(from);
+       return  regex_replace( in,pattern, to);
+   }
+
+   public: void add(string message) {
+       component += message;
    }
    public: string translate() const {
        string ans = component;
