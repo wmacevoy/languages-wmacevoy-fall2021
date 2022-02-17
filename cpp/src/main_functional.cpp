@@ -10,6 +10,9 @@ class WebTemplate {
    string component;  /// ex <p>hello ${who}</p>
    string translate() const {
        return "";
+
+     
+
    }
 };
 
