@@ -28,7 +28,7 @@ class WebTemplate {
            auto value = keyValue.second;
            ans = substitute(ans, "${" + key + "}",value);
        }
-       return "";
+       return ans;
    }
 };
 
