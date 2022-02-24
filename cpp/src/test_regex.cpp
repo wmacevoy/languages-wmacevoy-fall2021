@@ -11,7 +11,7 @@
 using namespace std;
 
 bool IsDecimal(const std::string &candidate) {
-    regex matcher("0|([1-9]((|')[0-9])*)");
+    regex matcher("-?(0|([1-9]('?[0-9])*))");
     return regex_match(candidate,matcher);
 }
 
@@ -28,6 +28,14 @@ TEST(RegEx,DecimalInteger) {
    ASSERT_TRUE(IsDecimal("1"));
    ASSERT_TRUE(IsDecimal("1'2'3"));
    ASSERT_TRUE(IsDecimal("1'000'000"));
+
+   ASSERT_TRUE(IsDecimal("-0"));
+   ASSERT_TRUE(IsDecimal("-1"));
+   ASSERT_TRUE(IsDecimal("-1'2'3"));
+   ASSERT_TRUE(IsDecimal("-1'000'000"));
+
+   ASSERT_FALSE(IsDecimal("-"));
+   ASSERT_FALSE(IsDecimal("00"));
    ASSERT_FALSE(IsDecimal("00"));
    ASSERT_FALSE(IsDecimal("0001"));
    ASSERT_FALSE(IsDecimal("1''000''000"));
@@ -41,5 +49,5 @@ TEST(RegEx,Double) {
 }
 
 TEST(RegEx,Identifier) {
-    
+
 }
