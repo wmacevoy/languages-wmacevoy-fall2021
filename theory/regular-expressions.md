@@ -69,9 +69,16 @@ r((0|1|2|3|4|5|6|7|8|9)
 
 Digit = (0|..|9)
 PositiveDigit=(1|..|9)
-Decimal = r(0|(PositiveDigit|Digit*))
+Decimal = r(0|(PositiveDigit|((|')Digit)*))
   = {"0","1","324908574239805732457890",
       but not "003323"}
+
+      
+      2'000'000
+      (365*24*60*60)
+      // 31536000 - wrong!
+      
+
 
 Letter=(A|..|Z|a|..|z)
 Separator=(-|_|+)

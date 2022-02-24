@@ -11,8 +11,16 @@
 using namespace std;
 
 bool IsDecimal(const std::string &candidate) {
-    regex matcher("(0|1|2|3|4|5|6|7|7|8|9|')+");
+    regex matcher("0|([1-9]((|')[0-9])*)");
     return regex_match(candidate,matcher);
+}
+
+bool IsDouble(const std::string &candidate) {
+    return true;
+}
+
+bool IsIdentifier(const std::string &candidate) {
+    return true;
 }
 
 TEST(RegEx,DecimalInteger) {
@@ -25,4 +33,13 @@ TEST(RegEx,DecimalInteger) {
    ASSERT_FALSE(IsDecimal("1''000''000"));
    ASSERT_FALSE(IsDecimal(".20"));
    ASSERT_FALSE(IsDecimal("20."));
+}
+
+TEST(RegEx,Double) {
+
+
+}
+
+TEST(RegEx,Identifier) {
+    
 }
