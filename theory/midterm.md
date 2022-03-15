@@ -1,3 +1,4 @@
+
 # Midterm Exam Notes
 
 ## Core Intro Concepts
@@ -97,7 +98,7 @@ EBNF/BNF
 
 Describe this set of strings: 
 ```
-  <start> ::= <<start>> a | b
+  <start> ::= <start> a | b
 ```
 Top Down vs Bottom up
 

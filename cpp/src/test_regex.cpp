@@ -11,7 +11,7 @@
 using namespace std;
 
 bool IsDecimal(const std::string &candidate) {
-    regex matcher("-?(0|([1-9]('?[0-9])*))");
+    regex matcher("(-?(0|([1-9]('?[0-9])*))|\\((0|([1-9]('?[0-9])*))\\))");
     return regex_match(candidate,matcher);
 }
 
