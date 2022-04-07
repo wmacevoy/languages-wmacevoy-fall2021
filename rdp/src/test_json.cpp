@@ -6,11 +6,13 @@
 using json = nlohmann::json;
 
 TEST(json,string) {
-  // https://pspdfkit.com/blog/2021/string-literals-character-encodings-and-multiplatform-cpp
-  std::string s = u8R"-=-({ "happy": true, "pi": 3.141 })-=-";
+  // https://pspdfkit.com/blog/2021/string-literals-character-   -and-multiplatform-cpp
+  std::string s = u8R"-=-({ "happy": "😀", "pi": 3.141 })-=-";
+                // "{ \"happy\": true, \"pi\": 3.141 }";
+
   json j = json::parse(s);
 
-  ASSERT_EQ(j["happy"],true);
+  ASSERT_EQ(j["happy"],u8R"-=-(😀)-=-");
   ASSERT_EQ(j["pi"],3.141);
 }
 
