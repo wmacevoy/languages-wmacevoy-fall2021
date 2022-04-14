@@ -65,6 +65,7 @@ Token Token::keyword(const std::string &word, int line, int col) {
   ans.obj["word"]=word;
   return ans;
 }
+
 Token Token::number(double value, int line, int col) {
   Token ans = base(TokenType::number,line,col);
   ans.obj["value"]=value;
@@ -103,6 +104,33 @@ Token Token::unrecognized(const std::string &what, int line, int col) {
   return ans;
 }
 
+double Token::getValue() const {
+  if (getType() != TokenType::number) {
+    throw std::range_error("not a number");
+  }
+  return double(obj["value"]);
+}
+
+std::string Token::getId() const {
+  if (getType() != TokenType::identifier) {
+    throw std::range_error("not an identifier");
+  }
+  return std::string(obj["id"]);
+}
+
+std::string Token::getWhat() const {
+  if (getType() != TokenType::unrecognized) {
+    throw std::range_error("known token");
+  }
+  return std::string(obj["what"]);
+}
+
+std::string Token::getWord() const {
+  if (getType() != TokenType::keyword) {
+    throw std::range_error("not a keyword");
+  }
+  return std::string(obj["word"]);
+}
 
 
 

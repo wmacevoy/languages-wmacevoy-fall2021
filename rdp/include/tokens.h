@@ -28,11 +28,15 @@ public:
   static Token eof(int line, int col);
   static Token unrecognized(const std::string &what, int line, int col);
   Token();
-  Token(const nlohmann::json &json);
+  Token(const nlohmann::json &_obj);
   const nlohmann::json &toJSON() const;
   TokenType getType() const;
   int getLine() const; 
   int getCol() const;
+  double getValue() const;
+  std::string getId() const;
+  std::string getWhat() const;
+  std::string getWord() const;  
 private:
   nlohmann::json obj;
 };

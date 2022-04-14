@@ -13,6 +13,8 @@ TEST(Token,Identifier) {
   ASSERT_EQ(token.getLine(), line);
   ASSERT_EQ(token.getCol(),col);
 
+  ASSERT_EQ(token.getId(),id);
+
   ASSERT_EQ(obj["type"],"token");
   ASSERT_EQ(obj["token-type"],"identifier");
   ASSERT_EQ(obj["id"],id);
@@ -31,6 +33,8 @@ TEST(Token,Keyword) {
   std::string word = "for";
   Token token = Token::keyword(word,line,col);
   nlohmann::json obj = token.toJSON();
+
+  ASSERT_EQ(token.getWord(),word);  
 
   ASSERT_EQ(token.getType(),tokenType);
   ASSERT_EQ(token.getLine(), line);
@@ -58,6 +62,8 @@ TEST(Token,Number) {
   ASSERT_EQ(token.getType(),tokenType);
   ASSERT_EQ(token.getLine(), line);
   ASSERT_EQ(token.getCol(),col);
+
+  ASSERT_EQ(token.getValue(),value);
 
   ASSERT_EQ(obj["type"],"token");
   ASSERT_EQ(obj["token-type"],"number");
@@ -117,6 +123,8 @@ TEST(Token,Unrecognized) {
   ASSERT_EQ(token.getType(),tokenType);
   ASSERT_EQ(token.getLine(), line);
   ASSERT_EQ(token.getCol(),col);
+
+  ASSERT_EQ(token.getWhat(),what);
 
   ASSERT_EQ(obj["type"],"token");
   ASSERT_EQ(obj["token-type"],"unrecognized");
