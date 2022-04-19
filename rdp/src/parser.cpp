@@ -46,7 +46,30 @@
 //     
 
 //extern const std::string SCANNER_INPUT1="(4+5)S*R";
-extern const nlohmann::json PARSER_RESULT1=u8R"-=-({"type":"ast","ast-type":"times","args":[{"type":"ast","ast-type":"store","args":[{"type":"ast","ast-type":"add","args":[{"type":"ast","ast-type":"number","value":4},{"type":"ast","ast-type":"number","value":5}]}]},{"type":"ast","ast-type":"recall"}]})-=-"_json;
+extern const nlohmann::json PARSER_RESULT1=u8R"-=-({
+  "type":"ast",
+  "ast-type":"times",
+  "args":
+    [
+      {
+        "type":"ast",
+        "ast-type":"store",
+        "args":
+        [
+          {
+           "type":"ast",
+           "ast-type":"add",
+           "args":
+           [
+             {"type":"ast","ast-type":"number","value":4},
+             {"type":"ast","ast-type":"number","value":5}
+           ]
+          }
+        ]
+      },
+      {"type":"ast","ast-type":"recall"}
+    ]
+   })-=-"_json;
 
 //extern const std::string SCANNER_INPUT2="3S+R";
 extern const nlohmann::json PARSER_RESULT2=u8R"-=-(???)-=-"_json;
