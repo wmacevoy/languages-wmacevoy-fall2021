@@ -23,7 +23,7 @@ TEST(Token,Identifier) {
 	    
   Token dup(obj);
 
-  ASSERT_EQ(obj,dup.toJSON());
+  ASSERT_EQ(token,dup);
 }
 
 TEST(Token,Keyword) {
@@ -48,7 +48,7 @@ TEST(Token,Keyword) {
 	    
   Token dup(obj);
 
-  ASSERT_EQ(obj,dup.toJSON());
+  ASSERT_EQ(token,dup);
 }
 
 TEST(Token,Number) {
@@ -73,7 +73,7 @@ TEST(Token,Number) {
 	    
   Token dup(obj);
 
-  ASSERT_EQ(obj,dup.toJSON());
+  ASSERT_EQ(token,dup);
 }
 
 TEST(Token,Simple) {
@@ -108,7 +108,7 @@ TEST(Token,Simple) {
 	    
     Token dup(obj);
 
-    ASSERT_EQ(obj,dup.toJSON());
+    ASSERT_EQ(token,dup);
   }
 }
 
@@ -134,5 +134,5 @@ TEST(Token,Unrecognized) {
 	    
   Token dup(obj);
 
-  ASSERT_EQ(obj,dup.toJSON());
+  ASSERT_EQ(token,dup);
 }

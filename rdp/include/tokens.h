@@ -36,7 +36,10 @@ public:
   double getValue() const;
   std::string getId() const;
   std::string getWhat() const;
-  std::string getWord() const;  
+  std::string getWord() const;
+
+  bool operator==(const Token &to) const;
+  bool operator!=(const Token &to) const;  
 private:
   nlohmann::json obj;
 };

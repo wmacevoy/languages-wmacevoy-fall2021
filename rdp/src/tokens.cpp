@@ -44,6 +44,8 @@ const nlohmann::json& Token::toJSON() const {
 TokenType Token::getType() const { return JSONToTokenType(obj["token-type"]); }
 int Token::getLine() const { return int(obj["line"]); }
 int Token::getCol() const { return int(obj["col"]); }
+bool Token::operator==(const Token &to) const { return obj == to.obj; }
+bool Token::operator!=(const Token &to) const { return obj != to.obj; }
 
 Token Token::base(TokenType type, int line, int col) {
   nlohmann::json obj;
