@@ -1,11 +1,11 @@
 #define SCANNER_CPP
 #include "scanner.h"
 
-Token Scanner::next() { return Token::eof(0,0); }
+Token::Ptr Scanner::next() { return Token::eof(0,0); }
 extern const std::string SCANNER_INPUT0="4";
 
 extern const std::string SCANNER_INPUT1="(4+5)S*R";
-extern const std::vector<Token> SCANNER_RESULT1 =
+extern const std::vector<Token::Ptr> SCANNER_RESULT1 =
   {
    Token::lparen(0,0),
    Token::number(4,0,1),
@@ -19,7 +19,7 @@ extern const std::vector<Token> SCANNER_RESULT1 =
   };
 
 extern const std::string SCANNER_INPUT2="3S+R";
-extern const std::vector<Token> SCANNER_RESULT2 =
+extern const std::vector<Token::Ptr> SCANNER_RESULT2 =
   {
    Token::number(3,0,0),
    Token::keyword("S",0,1),
@@ -42,12 +42,7 @@ MockScanner::MockScanner(const std::string &input) {
   at=0;
 }
 
-MockScanner::MockScanner(const std::vector<Token> &_tokens)
-  : tokens(_tokens),at(0)
-{
-}
-
-Token MockScanner::next() {
+Token::Ptr MockScanner::next() {
   int current = at;  
   if (at < tokens.size()) {
     ++at;

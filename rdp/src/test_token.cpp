@@ -1,27 +1,27 @@
 #include "gtest/gtest.h"
-#include "tokens.h"
+#include "token.h"
 
 TEST(Token,Identifier) {
   TokenType tokenType = TokenType::identifier;
   int line = 13;
   int col = 2;
   std::string id = "x";
-  Token token = Token::identifier(id,line,col);
-  nlohmann::json obj = token.toJSON();
+  Token::Ptr token = Token::identifier(id,line,col);
+  nlohmann::json obj = token->toJSON();
 
-  ASSERT_EQ(token.getType(),tokenType);
-  ASSERT_EQ(token.getLine(), line);
-  ASSERT_EQ(token.getCol(),col);
+  ASSERT_EQ(token->getType(),tokenType);
+  ASSERT_EQ(token->getLine(), line);
+  ASSERT_EQ(token->getCol(),col);
 
-  ASSERT_EQ(token.getId(),id);
+  ASSERT_EQ(token->getId(),id);
 
   ASSERT_EQ(obj["type"],"token");
   ASSERT_EQ(obj["token-type"],"identifier");
   ASSERT_EQ(obj["id"],id);
   ASSERT_EQ(obj["line"],line);
   ASSERT_EQ(obj["col"],col);
-	    
-  Token dup(obj);
+  
+  Token::Ptr dup(new Token(obj));
 
   ASSERT_EQ(token,dup);
 }
@@ -31,14 +31,14 @@ TEST(Token,Keyword) {
   int line = 13;
   int col = 2;
   std::string word = "for";
-  Token token = Token::keyword(word,line,col);
-  nlohmann::json obj = token.toJSON();
+  Token::Ptr token = Token::keyword(word,line,col);
+  nlohmann::json obj = token->toJSON();
 
-  ASSERT_EQ(token.getWord(),word);  
+  ASSERT_EQ(token->getWord(),word);  
 
-  ASSERT_EQ(token.getType(),tokenType);
-  ASSERT_EQ(token.getLine(), line);
-  ASSERT_EQ(token.getCol(),col);
+  ASSERT_EQ(token->getType(),tokenType);
+  ASSERT_EQ(token->getLine(), line);
+  ASSERT_EQ(token->getCol(),col);
 
   ASSERT_EQ(obj["type"],"token");
   ASSERT_EQ(obj["token-type"],"keyword");
@@ -46,7 +46,7 @@ TEST(Token,Keyword) {
   ASSERT_EQ(obj["line"],line);
   ASSERT_EQ(obj["col"],col);
 	    
-  Token dup(obj);
+  Token::Ptr dup(new Token(obj));
 
   ASSERT_EQ(token,dup);
 }
@@ -56,14 +56,14 @@ TEST(Token,Number) {
   int line = 13;
   int col = 2;
   double value = 3.14;
-  Token token = Token::number(value,line,col);
-  nlohmann::json obj = token.toJSON();
+  Token::Ptr token = Token::number(value,line,col);
+  nlohmann::json obj = token->toJSON();
 
-  ASSERT_EQ(token.getType(),tokenType);
-  ASSERT_EQ(token.getLine(), line);
-  ASSERT_EQ(token.getCol(),col);
+  ASSERT_EQ(token->getType(),tokenType);
+  ASSERT_EQ(token->getLine(), line);
+  ASSERT_EQ(token->getCol(),col);
 
-  ASSERT_EQ(token.getValue(),value);
+  ASSERT_EQ(token->getValue(),value);
 
   ASSERT_EQ(obj["type"],"token");
   ASSERT_EQ(obj["token-type"],"number");
@@ -71,7 +71,7 @@ TEST(Token,Number) {
   ASSERT_EQ(obj["line"],line);
   ASSERT_EQ(obj["col"],col);
 	    
-  Token dup(obj);
+  Token::Ptr dup(new Token(obj));
 
   ASSERT_EQ(token,dup);
 }
@@ -81,7 +81,7 @@ TEST(Token,Simple) {
 			   TokenType::lparen, TokenType::rparen, TokenType::eof }) {
     int line = 13;
     int col = 2;
-    Token token;
+    Token::Ptr token;
     std::string strTokenType;
     
     switch(tokenType) {
@@ -95,18 +95,18 @@ TEST(Token,Simple) {
     default: throw std::range_error("invalid");
     }
 
-    nlohmann::json obj = token.toJSON();
+    nlohmann::json obj = token->toJSON();
 
-    ASSERT_EQ(token.getType(),tokenType);
-    ASSERT_EQ(token.getLine(), line);
-    ASSERT_EQ(token.getCol(),col);
+    ASSERT_EQ(token->getType(),tokenType);
+    ASSERT_EQ(token->getLine(), line);
+    ASSERT_EQ(token->getCol(),col);
 
     ASSERT_EQ(obj["type"],"token");
     ASSERT_EQ(obj["token-type"],strTokenType);
     ASSERT_EQ(obj["line"],line);
     ASSERT_EQ(obj["col"],col);
 	    
-    Token dup(obj);
+    Token::Ptr dup(new Token(obj));
 
     ASSERT_EQ(token,dup);
   }
@@ -117,14 +117,14 @@ TEST(Token,Unrecognized) {
   int line = 13;
   int col = 2;
   std::string what = "?#4!!";
-  Token token = Token::unrecognized(what,line,col);
-  nlohmann::json obj = token.toJSON();
+  Token::Ptr token = Token::unrecognized(what,line,col);
+  nlohmann::json obj = token->toJSON();
 
-  ASSERT_EQ(token.getType(),tokenType);
-  ASSERT_EQ(token.getLine(), line);
-  ASSERT_EQ(token.getCol(),col);
+  ASSERT_EQ(token->getType(),tokenType);
+  ASSERT_EQ(token->getLine(), line);
+  ASSERT_EQ(token->getCol(),col);
 
-  ASSERT_EQ(token.getWhat(),what);
+  ASSERT_EQ(token->getWhat(),what);
 
   ASSERT_EQ(obj["type"],"token");
   ASSERT_EQ(obj["token-type"],"unrecognized");
@@ -132,7 +132,7 @@ TEST(Token,Unrecognized) {
   ASSERT_EQ(obj["line"],line);
   ASSERT_EQ(obj["col"],col);
 	    
-  Token dup(obj);
+  Token::Ptr dup(new Token(obj));
 
   ASSERT_EQ(token,dup);
 }

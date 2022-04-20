@@ -1,19 +1,20 @@
 #include <stdexcept>
-#include "tokens.h"
+#include "token.h"
 
 std::string TokenTypeToJSON(enum TokenType tokenType) {
   switch(tokenType) {
-  case identifier: return "identifier";
-  case keyword: return "keyword";
-  case number: return "number";
-  case add: return "add";
-  case sub: return "sub";
-  case divide: return "divide";
-  case times: return "times";
-  case lparen: return "lparen";
-  case rparen: return "rparen";
-  case eof: return "eof";
-  case unrecognized: return "unrecognized";
+  case TokenType::identifier: return "identifier";
+  case TokenType::keyword: return "keyword";
+  case TokenType::number: return "number";
+  case TokenType::add: return "add";
+
+  case TokenType::sub: return "sub";
+  case TokenType::divide: return "divide";
+  case TokenType::times: return "times";
+  case TokenType::lparen: return "lparen";
+  case TokenType::rparen: return "rparen";
+  case TokenType::eof: return "eof";
+  case TokenType::unrecognized: return "unrecognized";
   default: throw std::range_error("invalid token type");
   }
 }
@@ -44,65 +45,66 @@ const nlohmann::json& Token::toJSON() const {
 TokenType Token::getType() const { return JSONToTokenType(obj["token-type"]); }
 int Token::getLine() const { return int(obj["line"]); }
 int Token::getCol() const { return int(obj["col"]); }
-bool Token::operator==(const Token &to) const { return obj == to.obj; }
-bool Token::operator!=(const Token &to) const { return obj != to.obj; }
+int Token::operator<=>(const Token &to) const { return obj < to.obj ? -1 : (obj== to.obj ? 0 : 1); }
 
-Token Token::base(TokenType type, int line, int col) {
+Token::Ptr Token::base(TokenType type, int line, int col) {
   nlohmann::json obj;
   obj["type"]="token";
   obj["token-type"]=TokenTypeToJSON(type);
   obj["line"]=line;
   obj["col"]=col;
-  return Token(obj);
+  return Ptr(new Token(obj));
 }
 
-Token Token::identifier(const std::string &id, int line, int col) {
-  Token ans = base(TokenType::identifier,line,col);
-  ans.obj["id"]=id;
+Token::Ptr Token::identifier(const std::string &id, int line, int col) {
+  Ptr ans = base(TokenType::identifier,line,col);
+  ans->obj["id"]=id;
   return ans;
 }
 
-Token Token::keyword(const std::string &word, int line, int col) {
-  Token ans = base(TokenType::keyword,line,col);
-  ans.obj["word"]=word;
+Token::Ptr Token::keyword(const std::string &word, int line, int col) {
+  Ptr ans = base(TokenType::keyword,line,col);
+  ans->obj["word"]=word;
   return ans;
 }
 
-Token Token::number(double value, int line, int col) {
-  Token ans = base(TokenType::number,line,col);
-  ans.obj["value"]=value;
+Token::Ptr Token::number(double value, int line, int col) {
+  Ptr ans = base(TokenType::number,line,col);
+  ans->obj["value"]=value;
   return ans;
 }
 
-Token Token::add(int line, int col) {
+Token::Ptr Token::add(int line, int col) {
   return base(TokenType::add,line,col);
 }
-Token Token::sub(int line, int col) {
+
+Token::Ptr Token::sub(int line, int col) {
   return base(TokenType::sub,line,col);
 }
 
-Token Token::times(int line, int col) {
+Token::Ptr Token::times(int line, int col) {
   return base(TokenType::times,line,col);
 }
-Token Token::divide(int line, int col) {
+
+Token::Ptr Token::divide(int line, int col) {
   return base(TokenType::divide,line,col);
 }
 
-Token Token::lparen(int line, int col) {
+Token::Ptr Token::lparen(int line, int col) {
   return base(TokenType::lparen,line,col);
 }
 
-Token Token::rparen(int line, int col) {
+Token::Ptr Token::rparen(int line, int col) {
   return base(TokenType::rparen,line,col);
 }
 
-Token Token::eof(int line, int col) {
+Token::Ptr Token::eof(int line, int col) {
   return base(TokenType::eof,line,col);
 }
 
-Token Token::unrecognized(const std::string &what, int line, int col) {
-  Token ans = base(TokenType::unrecognized,line,col);
-  ans.obj["what"]=what;
+Token::Ptr Token::unrecognized(const std::string &what, int line, int col) {
+  Ptr ans = base(TokenType::unrecognized,line,col);
+  ans->obj["what"]=what;
   return ans;
 }
 
@@ -135,6 +137,16 @@ std::string Token::getWord() const {
 }
 
 
+int operator<=>(const Token::Ptr &a, const Token::Ptr &b) {
+  if ((&a == &b) || (!a && !b)) return 0;
+  if (!a) return -1;
+  if (!b) return  1;
+  return (*a) <=> (*b);
+}
 
-
-
+bool operator==(const Token::Ptr &a, const Token::Ptr &b) { return (a <=> b) == 0; }
+bool operator!=(const Token::Ptr &a, const Token::Ptr &b) { return (a <=> b) != 0; }
+bool operator<=(const Token::Ptr &a, const Token::Ptr &b) { return (a <=> b) <= 0; }
+bool operator>=(const Token::Ptr &a, const Token::Ptr &b) { return (a <=> b) >= 0; }
+bool operator<(const Token::Ptr &a, const Token::Ptr &b) { return (a <=> b) < 0; }
+bool operator>(const Token::Ptr &a, const Token::Ptr &b) { return (a <=> b) > 0; }
