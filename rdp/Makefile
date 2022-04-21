@@ -29,7 +29,8 @@
 
 # c++ compile flags
 #CXXFLAGS=-pthread -Iinclude -g -O2 -std=c++17 -fPIC
-CXXFLAGS=-pthread -Iinclude -g -std=gnu++2a -fPIC
+CXXSTD=$(shell if [ `uname` = "Darwin" ] ; then echo -std=gnu++2a; else echo -std=gnu++20; fi)
+CXXFLAGS=-pthread -Iinclude -g $(CXXSTD) -fPIC
 
 include Makefile.googletest
 
