@@ -45,3 +45,12 @@ class AST {
 
   int operator<=>(const AST&) const;  
 };
+
+bool operator==(const AST &a, const AST &b);
+bool operator!=(const AST &a, const AST &b);
+bool operator<=(const AST &a, const AST &b);
+bool operator>=(const AST &a, const AST &b);
+bool operator<(const AST &a, const AST &b);
+bool operator>(const AST &a, const AST &b);
+
+std::ostream& operator<<(std::ostream& out, const AST &ast);

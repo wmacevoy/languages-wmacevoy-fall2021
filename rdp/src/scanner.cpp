@@ -54,8 +54,8 @@ extern const std::vector<Token::Ptr> SCANNER_RESULT1 =
    Token::rparen(0,4),
    Token::keyword("S",0,5),
    Token::times(0,6),
-   Token::keyword("R",0,6),
-   Token::eof(0,7)
+   Token::keyword("R",0,7),
+   Token::eof(0,8)
   };
 
 extern const std::string SCANNER_INPUT2="3S+R";
@@ -120,6 +120,94 @@ Token::Ptr MockScanner::nextFromStream() {
   return tokens.at(current);
 }
 
+class RealScanner : public Scanner {
+public:
+  int line;
+  int col;
+  bool eof;
+
+  RealScanner() {
+    line=0;
+    col=0;
+    eof=false;
+  }
+
+  virtual void setStream(Stream stream) override {
+    Scanner::setStream(stream);
+    line=0;
+    col=0;
+    eof=false;
+  }
+  
+  struct got {
+    int ch;
+    int line;
+    int col;
+    got(int _ch, int _line, int _col) : ch(_ch), line(_line), col(_col) {}
+  };
+  std::stack<got> ungets;
+
+  void unget(const got &ungot) {
+    ungets.push(ungot);
+  }
+
+  got get() {
+    if (!ungets.empty()) {
+      got ans=ungets.top();
+      ungets.pop();
+      return ans;
+    }
+    int ch = (eof || !stream) ? -1 : stream->get();
+    if (ch < 0) { ch = -1; eof = true; }
+    if (ch == '\r') {
+      int lf = stream->get(); // windows cr/lf pair - maybe
+      if (lf < 0) { lf = -1; eof = true; }
+      else if (lf != '\n') {
+	unget(got(lf,line+1,0));
+      }
+      ch = '\n';
+    }
+    
+    got ans(ch,line,col);
+    
+    ++col;
+    if (ch == '\n') {
+      ++line;
+      col=0;
+    }
+    return ans;
+  }
+
+  virtual Token::Ptr next() override {
+    got g = get();
+    if (g.ch >= 'a' && g.ch <= 'z') return Token::identifier(std::string(1,char(g.ch)),g.line,g.col);
+    if (g.ch == 'S' || g.ch == 'R') return Token::keyword(std::string(1,char(g.ch)),g.line,g.col);
+    if (g.ch == '+') return Token::add(g.line,g.col);
+    if (g.ch == '-') return Token::sub(g.line,g.col);
+    if (g.ch == '*') return Token::times(g.line,g.col);
+    if (g.ch == '/') return Token::divide(g.line,g.col);
+    if (g.ch == '(') return Token::lparen(g.line,g.col);
+    if (g.ch == ')') return Token::rparen(g.line,g.col);
+    if (g.ch >= '0' && g.ch <= '9') {
+      std::string strnum;
+      bool decimal = false;
+      got h=g;
+      while ((h.ch >= '0' && h.ch <= '9') || (!decimal && h.ch == '.')) {
+	strnum.push_back(h.ch);
+	if (h.ch == '.') { decimal = true; }
+	h = get();
+      }
+      unget(h);
+      double value;
+      std::istringstream iss(strnum);
+      iss >> value;
+      return Token::number(value,g.line,g.col);
+    }
+    if (g.ch == -1) return Token::eof(g.line,g.col);
+    return Token::unrecognized(std::string(1,char(g.ch)),g.line,g.col);
+  }
+};
+
 
 Scanner::Ptr Scanner::mock() { return Ptr(new MockScanner()); }
-Scanner::Ptr Scanner::real() { throw std::range_error("todo"); }
+Scanner::Ptr Scanner::real() { return Ptr(new RealScanner()); }

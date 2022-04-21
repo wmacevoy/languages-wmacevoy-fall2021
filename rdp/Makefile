@@ -1,3 +1,4 @@
+
 #
 # Generic gcc/llvm c++ compiler wrapper for make in osx/linux/wsl
 # this is a fairly complex makefile, but it is made to
@@ -28,7 +29,7 @@
 
 # c++ compile flags
 #CXXFLAGS=-pthread -Iinclude -g -O2 -std=c++17 -fPIC
-CXXFLAGS=-pthread -Iinclude -g -std=gnu++17 -fPIC
+CXXFLAGS=-pthread -Iinclude -g -std=gnu++2a -fPIC
 
 include Makefile.googletest
 

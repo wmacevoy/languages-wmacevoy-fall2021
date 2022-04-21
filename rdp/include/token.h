@@ -57,4 +57,14 @@ private:
   nlohmann::json obj;
 };
 
+bool operator==(const Token &a, const Token &b);
+bool operator!=(const Token &a, const Token &b);
+bool operator<=(const Token &a, const Token &b);
+bool operator>=(const Token &a, const Token &b);
+bool operator<(const Token &a, const Token &b);
+bool operator>(const Token &a, const Token &b);
+
+std::ostream& operator<<(std::ostream& out, const Token &token);
+
+
 

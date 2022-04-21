@@ -148,5 +148,16 @@ bool operator==(const Token::Ptr &a, const Token::Ptr &b) { return (a <=> b) == 
 bool operator!=(const Token::Ptr &a, const Token::Ptr &b) { return (a <=> b) != 0; }
 bool operator<=(const Token::Ptr &a, const Token::Ptr &b) { return (a <=> b) <= 0; }
 bool operator>=(const Token::Ptr &a, const Token::Ptr &b) { return (a <=> b) >= 0; }
-bool operator<(const Token::Ptr &a, const Token::Ptr &b) { return (a <=> b) < 0; }
-bool operator>(const Token::Ptr &a, const Token::Ptr &b) { return (a <=> b) > 0; }
+bool operator<(const Token::Ptr &a, const Token::Ptr &b)  { return (a <=> b) < 0; }
+bool operator>(const Token::Ptr &a, const Token::Ptr &b)  { return (a <=> b) > 0; } 
+
+bool operator==(const Token &a, const Token &b) { return (a <=> b) == 0; }
+bool operator!=(const Token &a, const Token &b)	{ return (a <=> b) != 0; }
+bool operator<=(const Token &a, const Token &b)	{ return (a <=> b) <= 0; }
+bool operator>=(const Token &a, const Token &b)	{ return (a <=> b) >= 0; }
+bool operator<(const Token &a, const Token &b)	{ return (a <=> b) < 0; } 
+bool operator>(const Token &a, const Token &b)	{ return (a <=> b) > 0; }
+
+std::ostream& operator<<(std::ostream& out, const Token &token) {
+  return out << token.toJSON();
+}

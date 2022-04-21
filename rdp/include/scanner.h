@@ -10,7 +10,7 @@ class Scanner {
  public:
   typedef std::shared_ptr<std::istream> Stream;
   typedef std::shared_ptr<Scanner> Ptr;
-private:
+protected:
   Stream stream;
   std::stack<Token::Ptr> putBacks;
 public:

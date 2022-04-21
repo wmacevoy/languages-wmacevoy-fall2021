@@ -68,6 +68,7 @@ AST::Ptr AST::add(Token::Ptr token, AST::Ptr arg0, AST::Ptr arg1) {
 }
 
 AST::Ptr AST::unrecognized(Token::Ptr token) {
+
   Token::Ptr unrec = Token::unrecognized(token->toJSON().dump(),token->getLine(),token->getCol());
   return Ptr(new AST(unrec,baseJsonify));
 }
@@ -174,3 +175,13 @@ bool operator>=(const AST::Ptr &a, const AST::Ptr &b) { return (a <=> b) >= 0; }
 bool operator<(const AST::Ptr &a, const AST::Ptr &b) { return (a <=> b) < 0; }
 bool operator>(const AST::Ptr &a, const AST::Ptr &b) { return (a <=> b) > 0; }
 
+bool operator==(const AST &a, const AST &b)     { return (a <=> b) == 0; }
+bool operator!=(const AST &a, const AST &b)	{ return (a <=> b) != 0; }
+bool operator<=(const AST &a, const AST &b)	{ return (a <=> b) <= 0; }
+bool operator>=(const AST &a, const AST &b)	{ return (a <=> b) >= 0; }
+bool operator<(const AST &a, const AST &b)	{ return (a <=> b) < 0; } 
+bool operator>(const AST &a, const AST &b)	{ return (a <=> b) > 0; }
+
+std::ostream& operator<<(std::ostream& out, const AST &ast) {
+  return out << ast.toJSON();
+}

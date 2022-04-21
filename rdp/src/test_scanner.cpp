@@ -20,7 +20,20 @@ TEST(Scanner,Mock) {
     scanner->setString(mockInput(k));
     std::vector<Token::Ptr> expect = mockTokens(k);
     for (int i=0; i<expect.size(); ++i) {
-      ASSERT_EQ(scanner->next(),expect[i]);
+      ASSERT_EQ(*scanner->next(),*expect[i]);
     }
   }
 }
+
+TEST(Scanner,Real) {
+  for (int k=1; k<=2; ++k) {
+    Scanner::Ptr scanner=Scanner::real();
+    scanner->setString(mockInput(k));
+    std::vector<Token::Ptr> expect = mockTokens(k);
+    for (int i=0; i<expect.size(); ++i) {
+      ASSERT_EQ(*scanner->next(),*expect[i]);
+    }
+  }
+}
+
+
