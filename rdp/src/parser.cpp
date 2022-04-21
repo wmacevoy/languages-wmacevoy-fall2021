@@ -49,6 +49,17 @@
 //
 //
 
+// SCANNER_INPUT1="(4+5)S*R";
+//                  0      1         2   3         4      5          6     7          8
+// SCANNER_RESULT1=[lparen,number(4),add,number(5),rparen,keyword(S),times,keyword(R),eof]
+// PARSER_RESULT1=
+//       *
+//      / \
+//     S   R
+//     |
+//     +
+//    / \
+//   4   5
 extern const AST::Ptr PARSER_RESULT1=
   AST::times(SCANNER_RESULT1[6],
 	     AST::store(SCANNER_RESULT1[5],
@@ -57,8 +68,21 @@ extern const AST::Ptr PARSER_RESULT1=
 				 AST::number(SCANNER_RESULT1[3]))),
 	     AST::recall(SCANNER_RESULT1[7]));
 
-
-extern const AST::Ptr PARSER_RESULT2=AST::unrecognized(Token::eof(0,0));
+// SCANNER_INPUT2="3S+R";
+//                  0         1     2   3      4
+// SCANNER_RESULT2=[number(3),store,add,recall,eof]
+// PARSER_RESULT2=
+//       +
+//      / \
+//     S   R
+//     |
+//     3
+//
+extern const AST::Ptr PARSER_RESULT2=
+  AST::add(SCANNER_RESULT2[2],
+	   AST::store(SCANNER_RESULT2[1],
+		      AST::number(SCANNER_RESULT2[0])),
+	   AST::recall(SCANNER_RESULT2[3]));
 
 void Parser::setScanner(Scanner::Ptr _scanner) {
   scanner=_scanner;

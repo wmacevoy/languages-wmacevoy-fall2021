@@ -24,7 +24,6 @@ void Scanner::setStream(Stream _stream) {
 }
 
 Scanner::Stream Scanner::getStream() const {
-
   return stream;
 }
 
@@ -178,7 +177,7 @@ public:
     return ans;
   }
 
-  virtual Token::Ptr next() override {
+  virtual Token::Ptr nextFromStream() override {
     got g = get();
     if (g.ch >= 'a' && g.ch <= 'z') return Token::identifier(std::string(1,char(g.ch)),g.line,g.col);
     if (g.ch == 'S' || g.ch == 'R') return Token::keyword(std::string(1,char(g.ch)),g.line,g.col);

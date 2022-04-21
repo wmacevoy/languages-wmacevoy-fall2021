@@ -28,6 +28,26 @@ feature.
   - real parser
 - calc (in main_calc).  Lazy builder to apply these to a given calculation.
 
+## make / test / run
+
+Calc by default uses stdin.
+
+```sh
+make all
+./test_all
+bin/calc [--mockScanner] [--mockParser] [--file <file>] [--string <string>]
+```
+
+`ex1.in` and `ex2.in` have the sample input strings.
+
+```sh
+make all && bin/calc --file ex1.in
+```
+should produce 81.0 as a result.  You can run these in a docker with 
+
+```sh
+./run bin/calc ...
+```
 ## references
 
 JSON data is stored this way
