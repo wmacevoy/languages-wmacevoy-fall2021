@@ -18,11 +18,11 @@ AST::Ptr mockAST(int k) {
 
 TEST(Parser,Mock) {
   for (int k=1; k<=2; ++k) {
-    Scanner::Ptr scanner = Scanner::Ptr(new MockScanner(mockInput(k)));
-    Parser::Ptr parser = Parser::Ptr(new MockParser());
+    Scanner::Ptr scanner = Scanner::mock();
+    Parser::Ptr parser = Parser::mock();
 
     parser->setScanner(scanner);
-
+    
     AST::Ptr expect = mockAST(k);
     AST::Ptr result = parser->parse();
 

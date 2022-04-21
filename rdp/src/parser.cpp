@@ -70,6 +70,11 @@ Scanner::Ptr Parser::getScanner() const {
 
 AST::Ptr Parser::parse() { return AST::unrecognized(Token::eof(0,0)); }
 
+class MockParser : public Parser {
+ public:
+  virtual AST::Ptr parse();
+};
+
 AST::Ptr MockParser::parse() {
   Scanner::Ptr scanner = getScanner();
   std::vector<Token::Ptr> tokens;
@@ -86,3 +91,6 @@ AST::Ptr MockParser::parse() {
   }
   return AST::unrecognized(Token::eof(0,0));
 }
+
+Parser::Ptr Parser::mock() { return Ptr(new MockParser()); }
+Parser::Ptr Parser::real() { throw std::range_error("todo"); }

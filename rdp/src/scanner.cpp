@@ -1,8 +1,48 @@
 #define SCANNER_CPP
 #include "scanner.h"
 
-Token::Ptr Scanner::next() { return Token::eof(0,0); }
-extern const std::string SCANNER_INPUT0="4";
+#include <fstream>
+#include <sstream>
+
+
+void Scanner::setString(const std::string &str) {
+  setStream(Stream(new std::istringstream(str)));
+}
+
+void Scanner::setFile(const std::string &str) {
+  setStream(Stream(new std::ifstream(str)));
+}
+
+void Scanner::setStdin() {
+  // don't delete cin
+  Stream shim(&std::cin, [](auto p) {});
+  setStream(shim);
+}
+
+void Scanner::setStream(Stream _stream) {
+  stream = _stream;
+}
+
+Scanner::Stream Scanner::getStream() const {
+
+  return stream;
+}
+
+void Scanner::putBack(Token::Ptr token) { putBacks.push(token); }
+
+Token::Ptr Scanner::next() {
+  if (!putBacks.empty()) {
+    Token::Ptr ans = putBacks.top();
+    putBacks.pop();
+    return ans;
+  }
+  return nextFromStream();
+}
+
+Token::Ptr Scanner::nextFromStream() {
+  return Token::eof(0,0);
+}
+
 
 extern const std::string SCANNER_INPUT1="(4+5)S*R";
 extern const std::vector<Token::Ptr> SCANNER_RESULT1 =
@@ -31,21 +71,55 @@ extern const std::vector<Token::Ptr> SCANNER_RESULT2 =
 // 3. R+3S
 // 4. 2S*4+R
 
-MockScanner::MockScanner(const std::string &input) {
-  if (input == SCANNER_INPUT1) {
-    tokens = SCANNER_RESULT1;
-  } else if (input == SCANNER_INPUT2) {
-    tokens = SCANNER_RESULT2;
-  } else {
-    tokens.push_back(Token::unrecognized(input,0,0));
-  }
-  at=0;
+
+class MockScanner : public Scanner {
+ public:
+  std::vector < Token::Ptr > tokens;
+  int at;
+  MockScanner();
+  virtual Token::Ptr nextFromStream();  
+};
+
+MockScanner::MockScanner() {
+  at=-1;
 }
 
-Token::Ptr MockScanner::next() {
+std::string readall(std::shared_ptr<std::istream> streamptr) {
+  if (!streamptr) return "";
+  
+  std::istream &stream=*streamptr;
+  
+  std::string all;
+  for (;;) {
+    int ch = stream.get();
+    if (ch < 0) break;
+    all.push_back(ch);
+  }
+  return all;
+}
+
+Token::Ptr MockScanner::nextFromStream() {
+  if (at == -1) {
+    std::string input=readall(getStream());
+    
+    if (input == SCANNER_INPUT1) {
+      tokens = SCANNER_RESULT1;
+    } else if (input == SCANNER_INPUT2) {
+      tokens = SCANNER_RESULT2;
+    } else {
+      tokens.push_back(Token::unrecognized(input,0,0));
+      tokens.push_back(Token::eof(0,0));
+    }
+    at=0;
+  }
+  
   int current = at;  
   if (at < tokens.size()) {
     ++at;
   }
   return tokens.at(current);
 }
+
+
+Scanner::Ptr Scanner::mock() { return Ptr(new MockScanner()); }
+Scanner::Ptr Scanner::real() { throw std::range_error("todo"); }

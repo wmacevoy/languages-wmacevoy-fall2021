@@ -14,15 +14,13 @@ std::vector<Token::Ptr> mockTokens(int k) {
   throw std::range_error("invalid");  
 }
 
-void stop() {}
-
 TEST(Scanner,Mock) {
-  stop();
   for (int k=1; k<=2; ++k) {
-    MockScanner scanner(mockInput(k));
+    Scanner::Ptr scanner=Scanner::mock();
+    scanner->setString(mockInput(k));
     std::vector<Token::Ptr> expect = mockTokens(k);
     for (int i=0; i<expect.size(); ++i) {
-      ASSERT_EQ(scanner.next(),expect[i]);
+      ASSERT_EQ(scanner->next(),expect[i]);
     }
   }
 }
