@@ -1,10 +1,8 @@
 #pragma once
 
+#include "port.h"
+
 #include "token.h"
-#include <vector>
-#include <stack>
-#include <iostream>
-#include <memory>
 
 class Scanner {
  public:
@@ -16,6 +14,11 @@ protected:
 public:
   static Ptr mock();
   static Ptr real();
+  
+  static Stream stringStream(const std::string &str);
+  static Stream fileStream(const std::string &file);
+  static Stream stdinStream();
+  
   virtual void setString(const std::string &str);
   virtual void setFile(const std::string &file);  
   virtual void setStream(Stream stream);

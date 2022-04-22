@@ -1,9 +1,24 @@
+#pragma once
+
+#ifndef __STDC_FORMAT_MACROS
+#define __STDC_FORMAT_MACROS
+#endif
+
+#include <inttypes.h>
+#include <tgmath.h>
+#include <stdexcept>
+#include <vector>
+#include <stack>
+#include <map>
+#include <iostream>
 #include <string>
 #include <version>
+#include <memory>
+#include <functional>
 
 #include "json.hpp"
 
-typedef nlohmann::json JSON;
+using JSON = nlohmann::json;
 
 #if !defined(__cpp_char8_t)
 using char8_t = char;

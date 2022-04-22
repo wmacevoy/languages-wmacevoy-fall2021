@@ -1,10 +1,7 @@
 #pragma once
 
-#include <string>
-#include <memory>
-#include <functional>
+#include "port.h"
 
-#include "json.hpp"
 #include "token.h"
 
 enum class ASTType { number,recall,store,add,sub,times,divide,unrecognized };

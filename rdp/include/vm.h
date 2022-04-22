@@ -1,19 +1,17 @@
 #pragma once
 
-#include <stack>
-#include <map>
-#include "json.hpp"
+#include "port.h"
+
 #include "ast.h"
 
 class VM {
  public:
-  typedef std::map<std::string,nlohmann::json> Heap;
-  typedef std::stack < nlohmann::json > Stack;
-  
+  typedef std::map<std::string,JSON> Heap;
+  typedef std::stack<JSON> Stack;
 
   Heap heap;
   VM();
-  nlohmann::json run(AST::Ptr prog);
+  JSON run(AST::Ptr prog);
  private:
   void exec(AST::Ptr prog, Stack &stack);
 };

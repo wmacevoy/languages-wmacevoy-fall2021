@@ -1,23 +1,34 @@
-#define SCANNER_CPP
 #include "scanner.h"
+
 #include "examples.h"
 
 #include <fstream>
 #include <sstream>
 
-
-void Scanner::setString(const std::string &str) {
-  setStream(Stream(new std::istringstream(str)));
+Scanner::Stream Scanner::stringStream(const std::string &str) {
+  return Stream(new std::istringstream(str));
 }
 
-void Scanner::setFile(const std::string &str) {
-  setStream(Stream(new std::ifstream(str)));
+Scanner::Stream Scanner::fileStream(const std::string &file) {
+  return Stream(new std::ifstream(file));  
+}
+
+Scanner::Stream Scanner::stdinStream() {
+  // don't delete cin
+  Stream shim(&std::cin, [](auto p) {});
+  return shim;
+}
+
+void Scanner::setString(const std::string &str) {
+  setStream(stringStream(str));
+}
+
+void Scanner::setFile(const std::string &file) {
+  setStream(fileStream(file));
 }
 
 void Scanner::setStdin() {
-  // don't delete cin
-  Stream shim(&std::cin, [](auto p) {});
-  setStream(shim);
+  setStream(stdinStream());
 }
 
 void Scanner::setStream(Stream _stream) {
@@ -185,6 +196,6 @@ public:
   }
 };
 
-
 Scanner::Ptr Scanner::mock() { return Ptr(new MockScanner()); }
+
 Scanner::Ptr Scanner::real() { return Ptr(new RealScanner()); }

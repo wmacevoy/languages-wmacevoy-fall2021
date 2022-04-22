@@ -1,10 +1,6 @@
-
 #pragma once
 
-#include <string>
-#include <memory>
-
-#include "json.hpp"
+#include "port.h"
 
 enum class TokenType { 
     identifier,keyword,number,
@@ -41,9 +37,9 @@ public:
   static Ptr unrecognized(const std::string &what, int line, int col);
   
   Token();
-  Token(const nlohmann::json &_obj);
+  Token(const JSON &_obj);
   
-  const nlohmann::json &toJSON() const;
+  const JSON &toJSON() const;
   TokenType getType() const;
 
   int getLine() const; 
@@ -54,7 +50,7 @@ public:
   std::string getWord() const;
   int operator<=>(const Token&) const;
 private:
-  nlohmann::json obj;
+  JSON obj;
 };
 
 bool operator==(const Token &a, const Token &b);
