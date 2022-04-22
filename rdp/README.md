@@ -26,6 +26,8 @@ feature.
 - parser
   - mock parser
   - real parser
+- examples.  Provides example cases for test/mock.
+  
 - calc (in main_calc).  Lazy builder to apply these to a given calculation.
 
 ## make / test / run

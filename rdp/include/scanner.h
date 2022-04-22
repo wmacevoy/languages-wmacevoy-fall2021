@@ -12,7 +12,7 @@ class Scanner {
   typedef std::shared_ptr<Scanner> Ptr;
 protected:
   Stream stream;
-  std::stack<Token::Ptr> putBacks;
+  std::vector<Token::Ptr> putBacks;
 public:
   static Ptr mock();
   static Ptr real();
@@ -26,12 +26,3 @@ public:
 protected:
   virtual Token::Ptr nextFromStream();  
 };
-
-#ifndef SCANNER_CPP
-extern const std::string SCANNER_INPUT1;
-extern const std::vector<Token::Ptr> SCANNER_RESULT1;
-
-extern const std::string SCANNER_INPUT2;
-extern const std::vector<Token::Ptr> SCANNER_RESULT2;
-#endif
-

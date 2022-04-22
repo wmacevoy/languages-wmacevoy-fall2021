@@ -1,5 +1,5 @@
 // https://github.com/nlohmann/json
-#include "json.h"
+#include "port.h"
 
 #include "gtest/gtest.h"
 
@@ -7,8 +7,7 @@
 
 TEST(json,string) {
   // https://pspdfkit.com/blog/2021/string-literals-character-   -and-multiplatform-cpp
-  std::string s = u8R"-=-({ "happy": "😀", "pi": 3.141 })-=-";
-                // "{ \"happy\": true, \"pi\": 3.141 }";
+  std::string s = u8R"-=-({ "happy": "😀", "pi": 3.141 })-=-"_string;
 
   JSON j = JSON::parse(s);
 
@@ -29,8 +28,8 @@ TEST(json,object) {
     std::ostringstream oss;
     oss << "j1[" << key << "]=" << value;
     std::string expect;
-    if (key == "answer") expect=u8R"-=-(j1[answer]={"everything":42})-=-";
-    if (key == "fibonacci") expect=u8R"-=-(j1[fibonacci]=[1,1,2,3,5,8])-=-";
+    if (key == "answer") expect=u8R"-=-(j1[answer]={"everything":42})-=-"_string;
+    if (key == "fibonacci") expect=u8R"-=-(j1[fibonacci]=[1,1,2,3,5,8])-=-"_string;
     ASSERT_EQ(expect,oss.str());
   }
 }

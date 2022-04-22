@@ -29,39 +29,41 @@
 
 # c++ compile flags
 #CXXFLAGS=-pthread -Iinclude -g -O2 -std=c++17 -fPIC
-CXXSTD=$(shell if [ `uname` = "Darwin" ] ; then echo -std=gnu++2a; else echo -std=gnu++20; fi)
-CXXFLAGS=-pthread -Iinclude -g $(CXXSTD) -fPIC
+
+CXXSTD:=$(shell if [ `uname` = "Darwin" ] ; then echo gnu++2a; else echo gnu++20; fi)
+
+CXXFLAGS:=-pthread -Iinclude -g -std=${CXXSTD} -fPIC
 
 include Makefile.googletest
 
 FIND_SRC ?= $(shell if [ `uname` = "Darwin" ] ; then echo find -E src ; else echo find src -regextype posix-extended ; fi)
 
 # all not-main and not-test source files in the src folder
-CPP_PARTS=$(shell $(FIND_SRC) -iregex '[a-z0-9].*\.(cpp)' -and -not \( -name '.*' -or -name 'main_*' -or -name 'test_*' \) )
-C_PARTS=$(shell $(FIND_SRC) -iregex '[a-z0-9].*\.(c)' -and -not \( -name '.*' -or -name 'main_*' -or -name 'test_*' \) )
+CPP_PARTS:=$(shell $(FIND_SRC) -iregex '[a-z0-9].*\.(cpp)' -and -not \( -name '.*' -or -name 'main_*' -or -name 'test_*' \) )
+C_PARTS:=$(shell $(FIND_SRC) -iregex '[a-z0-9].*\.(c)' -and -not \( -name '.*' -or -name 'main_*' -or -name 'test_*' \) )
 # src/XXXX.cpp -> tmp/XXXX.cpp.o object files
-CPP_PARTO=$(patsubst src/%.cpp,tmp/%.cpp.o,$(CPP_PARTS))
-C_PARTO=$(patsubst src/%.cpp,tmp/%.c.o,$(C_PARTS))
-PARTO=$(CPP_PARTO) $(C_PARTO)
+CPP_PARTO:=$(patsubst src/%.cpp,tmp/%.cpp.o,$(CPP_PARTS))
+C_PARTO:=$(patsubst src/%.cpp,tmp/%.c.o,$(C_PARTS))
+PARTO:=$(CPP_PARTO) $(C_PARTO)
 
 # program main source files in src
-CPP_MAINS=$(shell find src -name 'main_*.cpp')
-C_MAINS=$(shell find src -name 'main_*.c')
+CPP_MAINS:=$(shell find src -name 'main_*.cpp')
+C_MAINS:=$(shell find src -name 'main_*.c')
 
 # src/main_XXXX.cpp -> bin/XXXX executables
-CPP_MAINX=$(patsubst src/main_%.cpp,bin/%,$(CPP_MAINS))
-C_MAINX=$(patsubst src/main_%.cpp,bin/%,$(C_MAINS))
+CPP_MAINX:=$(patsubst src/main_%.cpp,bin/%,$(CPP_MAINS))
+C_MAINX:=$(patsubst src/main_%.cpp,bin/%,$(C_MAINS))
 
-MAINX = $(CPP_MAINX) $(C_MAINX) 
+MAINX := $(CPP_MAINX) $(C_MAINX) 
 ALL += $(MAINX)
 
 # test source files in src
-CPP_TESTS=$(shell find src -name 'test_*.cpp')
-C_TESTS=$(shell find src -name 'test_*.c')
+CPP_TESTS:=$(shell find src -name 'test_*.cpp')
+C_TESTS:=$(shell find src -name 'test_*.c')
 
 # src/test_XXXX.cpp -> bin/test_XXXX test executables
-CPP_TESTX=$(patsubst src/test_%.cpp,bin/test_%,$(CPP_TESTS))
-C_TESTX=$(patsubst src/test_%.c,bin/test_%,$(C_TESTS))
+CPP_TESTX:=$(patsubst src/test_%.cpp,bin/test_%,$(CPP_TESTS))
+C_TESTX:=$(patsubst src/test_%.c,bin/test_%,$(C_TESTS))
 
 TESTX = $(CPP_TESTX) $(C_TESTX)
 ALL += $(TESTX)

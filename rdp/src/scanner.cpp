@@ -1,5 +1,6 @@
 #define SCANNER_CPP
 #include "scanner.h"
+#include "examples.h"
 
 #include <fstream>
 #include <sstream>
@@ -20,6 +21,7 @@ void Scanner::setStdin() {
 }
 
 void Scanner::setStream(Stream _stream) {
+  putBacks.clear();
   stream = _stream;
 }
 
@@ -27,12 +29,12 @@ Scanner::Stream Scanner::getStream() const {
   return stream;
 }
 
-void Scanner::putBack(Token::Ptr token) { putBacks.push(token); }
+void Scanner::putBack(Token::Ptr token) { putBacks.push_back(token); }
 
 Token::Ptr Scanner::next() {
   if (!putBacks.empty()) {
-    Token::Ptr ans = putBacks.top();
-    putBacks.pop();
+    Token::Ptr ans = *putBacks.rbegin();
+    putBacks.pop_back();
     return ans;
   }
   return nextFromStream();
@@ -42,82 +44,56 @@ Token::Ptr Scanner::nextFromStream() {
   return Token::eof(0,0);
 }
 
-
-extern const std::string SCANNER_INPUT1="(4+5)S*R";
-extern const std::vector<Token::Ptr> SCANNER_RESULT1 =
-  {
-   Token::lparen(0,0),
-   Token::number(4,0,1),
-   Token::add(0,2),
-   Token::number(5,0,3),
-   Token::rparen(0,4),
-   Token::keyword("S",0,5),
-   Token::times(0,6),
-   Token::keyword("R",0,7),
-   Token::eof(0,8)
-  };
-
-extern const std::string SCANNER_INPUT2="3S+R";
-extern const std::vector<Token::Ptr> SCANNER_RESULT2 =
-  {
-   Token::number(3,0,0),
-   Token::keyword("S",0,1),
-   Token::add(0,2),
-   Token::keyword("R",0,3),
-   Token::eof(0,4)
-  };
-
-// 3. R+3S
-// 4. 2S*4+R
-
-
 class MockScanner : public Scanner {
  public:
+  std::string str() {
+    Stream stream = getStream();
+    if (!stream) return "";
+  
+    std::string all;
+    for (;;) {
+      int ch = stream->get();
+      if (ch < 0) break;
+      all.push_back(ch);
+    }
+    return all;
+  }
+
+  void mockStream() {
+    at=0;
+    tokens.clear();
+    std::string input=str();
+    int n = Example::size();
+    for (int k=0; k<n; ++k) {
+      Example::Ptr ex = Example::example(k);
+      if (ex->input == input) {
+	tokens=ex->tokens;
+	return;
+      }
+    }
+    tokens.push_back(Token::unrecognized(input,0,0));
+    tokens.push_back(Token::eof(0,0));
+  }
+  
   std::vector < Token::Ptr > tokens;
   int at;
-  MockScanner();
-  virtual Token::Ptr nextFromStream();  
-};
-
-MockScanner::MockScanner() {
-  at=-1;
-}
-
-std::string readall(std::shared_ptr<std::istream> streamptr) {
-  if (!streamptr) return "";
-  
-  std::istream &stream=*streamptr;
-  
-  std::string all;
-  for (;;) {
-    int ch = stream.get();
-    if (ch < 0) break;
-    all.push_back(ch);
-  }
-  return all;
-}
-
-Token::Ptr MockScanner::nextFromStream() {
-  if (at == -1) {
-    std::string input=readall(getStream());
-    
-    if (input == SCANNER_INPUT1) {
-      tokens = SCANNER_RESULT1;
-    } else if (input == SCANNER_INPUT2) {
-      tokens = SCANNER_RESULT2;
-    } else {
-      tokens.push_back(Token::unrecognized(input,0,0));
-      tokens.push_back(Token::eof(0,0));
+  MockScanner() { at = 0; }
+  virtual void setStream(Stream stream) override {
+    Scanner::setStream(stream);
+    at=-1;
+  }  
+  virtual Token::Ptr nextFromStream() override {
+    if (at == -1) {
+      mockStream();
     }
-    at=0;
-  }
   
-  int current = at;  
-  if (at < tokens.size()) {
-    ++at;
+    int current = at;  
+    if (at < tokens.size()) {
+      ++at;
+    }
+    return tokens.at(current);
   }
-  return tokens.at(current);
-}
+};
 
 class RealScanner : public Scanner {
 public:
@@ -136,6 +112,7 @@ public:
     line=0;
     col=0;
     eof=false;
+    ungets.clear();
   }
   
   struct got {
@@ -144,16 +121,16 @@ public:
     int col;
     got(int _ch, int _line, int _col) : ch(_ch), line(_line), col(_col) {}
   };
-  std::stack<got> ungets;
+  std::vector<got> ungets;
 
   void unget(const got &ungot) {
-    ungets.push(ungot);
+    ungets.push_back(ungot);
   }
 
   got get() {
     if (!ungets.empty()) {
-      got ans=ungets.top();
-      ungets.pop();
+      got ans=*ungets.rbegin();
+      ungets.pop_back();
       return ans;
     }
     int ch = (eof || !stream) ? -1 : stream->get();
@@ -176,6 +153,7 @@ public:
     }
     return ans;
   }
+
 
   virtual Token::Ptr nextFromStream() override {
     got g = get();
