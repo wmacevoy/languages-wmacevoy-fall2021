@@ -32,62 +32,76 @@ Token::Ptr append(std::vector<Token::Ptr> &tokens, Token::Ptr token) {
   return token;
 }
 
-
 Example::Ptr ex0() {
   int line=0, col=0;
-  std::string input = "(4+5)S*R";
+  std::string input = "3.14";
   
   std::vector<Token::Ptr> tokens;
-  Token::Ptr tkLparen0 = append(tokens,Token::lparen(line,col++));
-  Token::Ptr tkFour1 = append(tokens,Token::number(4,line,col++));
-  Token::Ptr tkAdd2 = append(tokens,Token::add(line,col++));
-  Token::Ptr tkFive3 = append(tokens,Token::number(5,line,col++));
-  Token::Ptr tkRparen4 = append(tokens,Token::rparen(line,col++));
-  Token::Ptr tkStore5 = append(tokens,Token::keyword("S",line,col++));
-  Token::Ptr tkTimes6 = append(tokens,Token::times(line,col++));
-  Token::Ptr tkRecall7 = append(tokens,Token::keyword("R",line,col++));
-  Token::Ptr tkEof8 = append(tokens,Token::eof(line,col++));
+  Token::Ptr tk0Pi = append(tokens,Token::number(3.14,line,col)); col += 4;
+  Token::Ptr tk1Eof = append(tokens,Token::eof(line,col));        col += 1;
 
-  AST::Ptr ast =
-    AST::times(tkTimes6,
-	       AST::store(tkStore5,
-			  AST::add(tkAdd2,
-				   AST::number(tkFour1),
-				   AST::number(tkFive3))),
-	       AST::recall(tkRecall7));
-
-  double ans = 81;  
+  AST::Ptr ast = AST::number(tk0Pi);
+  double ans = 3.14;
 
   return Example::Ptr(new Example(input,tokens,ast,ans));
 }
 
 Example::Ptr ex1() {
   int line=0, col=0;
+  std::string input = "(4+5)S*R";
+  
+  std::vector<Token::Ptr> tokens;
+  Token::Ptr tk0Lparen = append(tokens,Token::lparen(line,col++));
+  Token::Ptr tk1Four = append(tokens,Token::number(4,line,col++));
+  Token::Ptr tk2Add = append(tokens,Token::add(line,col++));
+  Token::Ptr tk3Five = append(tokens,Token::number(5,line,col++));
+  Token::Ptr tk4Rparen = append(tokens,Token::rparen(line,col++));
+  Token::Ptr tk5Store = append(tokens,Token::keyword("S",line,col++));
+  Token::Ptr tk6Times = append(tokens,Token::times(line,col++));
+  Token::Ptr tk7Recall = append(tokens,Token::keyword("R",line,col++));
+  Token::Ptr tk8Eof = append(tokens,Token::eof(line,col++));
+
+  AST::Ptr ast =
+    AST::times(tk6Times,
+	       AST::store(tk5Store,
+			  AST::add(tk2Add,
+				   AST::number(tk1Four),
+				   AST::number(tk3Five))),
+	       AST::recall(tk7Recall));
+
+  double ans = 81;  
+
+  return Example::Ptr(new Example(input,tokens,ast,ans));
+}
+
+Example::Ptr ex2() {
+  int line=0, col=0;
   std::string input = "3S+R";
   
   std::vector<Token::Ptr> tokens;
-  Token::Ptr tkThree0 = append(tokens,Token::number(3,line,col++));
-  Token::Ptr tkStore1 = append(tokens,Token::keyword("S",line,col++));
-  Token::Ptr tkAdd2 = append(tokens,Token::add(line,col++));
-  Token::Ptr tkRecall3 = append(tokens,Token::keyword("R",line,col++));
-  Token::Ptr tkEof4 = append(tokens,Token::eof(line,col++));
+  Token::Ptr tk0Three = append(tokens,Token::number(3,line,col++));
+  Token::Ptr tk1Store = append(tokens,Token::keyword("S",line,col++));
+  Token::Ptr tk2Add = append(tokens,Token::add(line,col++));
+  Token::Ptr tk3Recall = append(tokens,Token::keyword("R",line,col++));
+  Token::Ptr tk4Eof = append(tokens,Token::eof(line,col++));
 
   AST::Ptr ast =
-    AST::add(tkAdd2,
-	     AST::store(tkStore1,
-			AST::number(tkThree0)),
-	     AST::recall(tkRecall3));
+    AST::add(tk2Add,
+	     AST::store(tk1Store,
+			AST::number(tk0Three)),
+	     AST::recall(tk3Recall));
 
   double ans = 6;
 
   return Example::Ptr(new Example(input,tokens,ast,ans));
 }
 
-std::size_t Example::size() { return 2; }
+std::size_t Example::size() { return 3; }
 Example::Ptr Example::example(int k) {
   switch(k) {
   case 0: return ex0();
   case 1: return ex1();
+  case 2: return ex2();    
   default: return NULL;
   }
 }

@@ -128,7 +128,7 @@ tmp/%.cpp.o: src/%.cpp
 # generic compile a c source file rule
 tmp/%.c.o: src/%.c
 	mkdir -p `dirname $@`
-	$(CC $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 # generic link an executable rule
 bin/% : tmp/main_%.cpp.o $(PARTO) 
@@ -138,7 +138,7 @@ bin/% : tmp/main_%.cpp.o $(PARTO)
 # generic link an executable rule
 bin/% : tmp/main_%.c.o $(PARTO) 
 	mkdir -p `dirname $@`
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 # generic link a test executable rule
 bin/test_% : tmp/test_%.cpp.o $(PARTO)

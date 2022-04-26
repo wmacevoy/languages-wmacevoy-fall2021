@@ -5,6 +5,8 @@
 #include <fstream>
 #include <sstream>
 
+Scanner::Scanner() : at(0), debug(false)  {}
+
 Scanner::Stream Scanner::stringStream(const std::string &str) {
   return Stream(new std::istringstream(str));
 }
@@ -32,6 +34,7 @@ void Scanner::setStdin() {
 }
 
 void Scanner::setStream(Stream _stream) {
+  at=0;
   putBacks.clear();
   stream = _stream;
 }
@@ -40,15 +43,63 @@ Scanner::Stream Scanner::getStream() const {
   return stream;
 }
 
-void Scanner::putBack(Token::Ptr token) { putBacks.push_back(token); }
+void Scanner::putBack(Token::Ptr token) {
+  --at;
+  putBacks.push_back(token);
+}
 
 Token::Ptr Scanner::next() {
+  Token::Ptr ans;
   if (!putBacks.empty()) {
-    Token::Ptr ans = *putBacks.rbegin();
+    ans = *putBacks.rbegin();
     putBacks.pop_back();
-    return ans;
+  } else {
+    ans = nextFromStream();
   }
-  return nextFromStream();
+
+  if (!marks.empty()) {
+    marked.push_back(ans);
+  }
+  if (debug) {
+    std::cerr << "token at=" << at << "=" << ans->toJSON() << std::endl;
+  }
+  ++at;
+  return ans;
+}
+
+Scanner::Mark Scanner::mark() {
+  marks.insert(at);
+  return at;
+}
+
+void Scanner::unmark(Mark mark) {
+  Mark lo1 = *marks.begin();
+  auto i = marks.find(mark);
+  if (i != marks.end()) {
+    marks.erase(i);
+  }
+  Mark lo2 = marks.empty() ? at : *marks.begin();
+  while (lo1 < lo2) {
+    marked.pop_front();
+    ++lo1;
+  }
+}
+
+void Scanner::reset(Mark mark) {
+  Mark lo = *marks.begin();
+  while (lo + marked.size() > mark) {
+    putBack(*marked.rbegin());
+    marked.pop_back();
+  }
+}
+
+void Scanner::accept(Mark mark) {
+  unmark(mark);
+}
+
+void Scanner::reject(Mark mark) {
+  reset(mark);
+  unmark(mark);
 }
 
 Token::Ptr Scanner::nextFromStream() {
@@ -71,7 +122,6 @@ class MockScanner : public Scanner {
   }
 
   void mockStream() {
-    at=0;
     tokens.clear();
     std::string input=str();
     int n = Example::size();
@@ -87,22 +137,13 @@ class MockScanner : public Scanner {
   }
   
   std::vector < Token::Ptr > tokens;
-  int at;
-  MockScanner() { at = 0; }
   virtual void setStream(Stream stream) override {
     Scanner::setStream(stream);
-    at=-1;
-  }  
-  virtual Token::Ptr nextFromStream() override {
-    if (at == -1) {
-      mockStream();
-    }
+    mockStream();
+  }
   
-    int current = at;  
-    if (at < tokens.size()) {
-      ++at;
-    }
-    return tokens.at(current);
+  virtual Token::Ptr nextFromStream() override {
+    return tokens.at(at);
   }
 };
 

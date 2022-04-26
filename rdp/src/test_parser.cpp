@@ -41,4 +41,3 @@ TEST(Parser,Real) {
     ASSERT_EQ(expect,result);
   }
 }
-
