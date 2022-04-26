@@ -23,7 +23,6 @@ public:
   static Ptr mock();
   static Ptr real();
 
-  
   static Stream stringStream(const std::string &str);
   static Stream fileStream(const std::string &file);
   static Stream stdinStream();
@@ -40,6 +39,7 @@ public:
   virtual Token::Ptr next();
 
   Mark mark();
+
   void accept(Mark mark);
   void reject(Mark mark);
 protected:

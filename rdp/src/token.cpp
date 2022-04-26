@@ -1,7 +1,7 @@
 #include <stdexcept>
 #include "token.h"
 
-std::string TokenTypeToJSON(enum TokenType tokenType) {
+std::string TokenTypeToJSON(TokenType tokenType) {
   switch(tokenType) {
   case TokenType::identifier: return "identifier";
   case TokenType::keyword: return "keyword";
@@ -19,7 +19,7 @@ std::string TokenTypeToJSON(enum TokenType tokenType) {
   }
 }
 
-enum TokenType JSONToTokenType(const std::string &jsonTokenType) {
+TokenType JSONToTokenType(const std::string &jsonTokenType) {
   if (jsonTokenType == "identifier") return TokenType::identifier;
   if (jsonTokenType == "keyword") return TokenType::keyword;
   if (jsonTokenType == "number") return TokenType::number;

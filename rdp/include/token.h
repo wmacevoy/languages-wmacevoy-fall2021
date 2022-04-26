@@ -8,8 +8,8 @@ enum class TokenType {
     lparen, rparen,eof,unrecognized 
 };
 
-std::string TokenTypeToJSON(enum TokenType tokenType);
-enum TokenType JSONToTokenType(const std::string &jsonTokenType);
+std::string TokenTypeToJSON(TokenType tokenType);
+TokenType JSONToTokenType(const std::string &jsonTokenType);
 
 class Token { 
 public:
@@ -32,7 +32,6 @@ public:
   static Ptr divide(int line, int col);  
   static Ptr lparen(int line, int col);
   static Ptr rparen(int line, int col);
-
   static Ptr eof(int line, int col);
   static Ptr unrecognized(const std::string &what, int line, int col);
   

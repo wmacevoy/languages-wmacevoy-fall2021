@@ -36,6 +36,8 @@ void Scanner::setStdin() {
 void Scanner::setStream(Stream _stream) {
   at=0;
   putBacks.clear();
+  marks.clear();
+  marked.clear();
   stream = _stream;
 }
 
