@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t cpp . && docker run --rm cpp "$@"
+docker build -t rdp . && docker run --rm rdp "$@"

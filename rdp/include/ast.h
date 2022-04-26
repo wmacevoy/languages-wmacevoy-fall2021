@@ -1,34 +1,55 @@
 #pragma once
 
-#include <string>
-#include <function>
-#include "json.hpp"
+#include "port.h"
 
 #include "token.h"
-#include "vm.h"
 
-enum ASTType { literal,store,recall,binary,unary };
+enum class ASTType { number,recall,store,add,sub,times,divide,unrecognized };
 
 std::string ASTTypeToJSON(enum ASTType astType);
 enum ASTType JSONToASTType(const std::string &jsonASTType);
 
-class AST;
-std::shared_ptr<AST> ASTP;
+class AST {
+ public:
+  typedef std::shared_ptr < AST > Ptr;
+  friend int operator<=>(const Ptr &a, const Ptr &b);
+  friend bool operator==(const Ptr &a, const Ptr &b);
+  friend bool operator!=(const Ptr &a, const Ptr &b);
+  friend bool operator<=(const Ptr &a, const Ptr &b);
+  friend bool operator>=(const Ptr &a, const Ptr &b);
+  friend bool operator<(const Ptr &a, const Ptr &b);
+  friend bool operator>(const Ptr &a, const Ptr &b);
+  
+  static Ptr number(Token::Ptr token);
+  static Ptr add(Token::Ptr token, Ptr arg0, Ptr arg1);
+  static Ptr sub(Token::Ptr token, Ptr arg0, Ptr arg1);
+  static Ptr times(Token::Ptr token, Ptr arg0, Ptr arg1);
+  static Ptr divide(Token::Ptr token, Ptr arg0, Ptr arg1);
+  static Ptr store(Token::Ptr token, Ptr arg0);
+  static Ptr recall(Token::Ptr token);
+  static Ptr unrecognized(Token::Ptr token);
 
-class AST { 
-public:
-  std::function<void(VM &vm, ASTP &node)> eval;
-  static ASTP base(ASTType type, int line, int col);
-  static ASTP literal(const Token &literal);
-  static ASTP store(const Token &store);
-  static ASTP recall(const Token &recall);
-  static ASTP add(const Token &recall);
-  AST();
-  AST(const nlohmann::json &json);
-  const nlohmann::json &toJSON() const;
+  typedef std::function<nlohmann::json(const AST &ast)> Jsonify;
+  AST(Token::Ptr _token, const Jsonify &_jsonify);
+  AST(Token::Ptr _token, const Jsonify &_jsonify, Ptr arg0);
+  AST(Token::Ptr _token, const Jsonify &_jsonify, Ptr arg0, Ptr arg1);
+
   ASTType getType() const;
-private:
-  nlohmann::json obj;
+
+  Jsonify jsonify;
+  nlohmann::json toJSON() const;
+  
+  Token::Ptr token;
+  std::vector<Ptr> args;
+
+  int operator<=>(const AST&) const;  
 };
 
+bool operator==(const AST &a, const AST &b);
+bool operator!=(const AST &a, const AST &b);
+bool operator<=(const AST &a, const AST &b);
+bool operator>=(const AST &a, const AST &b);
+bool operator<(const AST &a, const AST &b);
+bool operator>(const AST &a, const AST &b);
 
+std::ostream& operator<<(std::ostream& out, const AST &ast);

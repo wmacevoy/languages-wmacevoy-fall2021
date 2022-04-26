@@ -1,27 +1,26 @@
+// https://github.com/nlohmann/json
+#include "port.h"
+
 #include "gtest/gtest.h"
 
-// https://github.com/nlohmann/json
-#include "json.hpp"
-
-using json = nlohmann::json;
+// using json = nlohmann::json;
 
 TEST(json,string) {
   // https://pspdfkit.com/blog/2021/string-literals-character-   -and-multiplatform-cpp
-  std::string s = u8R"-=-({ "happy": "😀", "pi": 3.141 })-=-";
-                // "{ \"happy\": true, \"pi\": 3.141 }";
+  std::string s = u8R"-=-({ "happy": "😀", "pi": 3.141 })-=-"_string;
 
-  json j = json::parse(s);
+  JSON j = JSON::parse(s);
 
   ASSERT_EQ(j["happy"],u8R"-=-(😀)-=-");
   ASSERT_EQ(j["pi"],3.141);
 }
 
 TEST(json,object) {
-  json j1;
+  JSON j1;
   j1["answer"]["everything"] = 42;
   j1["fibonacci"]={1,1,2,3,5,8};
 
-  json j2=u8R"-=-({ "answer": { "everything": 42 }, "fibonacci" : [1,1,2,3,5,8] })-=-"_json;
+  JSON j2=u8R"-=-({ "answer": { "everything": 42 }, "fibonacci" : [1,1,2,3,5,8] })-=-"_JSON;
 
   ASSERT_EQ(j1,j2);
 
@@ -29,8 +28,8 @@ TEST(json,object) {
     std::ostringstream oss;
     oss << "j1[" << key << "]=" << value;
     std::string expect;
-    if (key == "answer") expect=u8R"-=-(j1[answer]={"everything":42})-=-";
-    if (key == "fibonacci") expect=u8R"-=-(j1[fibonacci]=[1,1,2,3,5,8])-=-";
+    if (key == "answer") expect=u8R"-=-(j1[answer]={"everything":42})-=-"_string;
+    if (key == "fibonacci") expect=u8R"-=-(j1[fibonacci]=[1,1,2,3,5,8])-=-"_string;
     ASSERT_EQ(expect,oss.str());
   }
 }

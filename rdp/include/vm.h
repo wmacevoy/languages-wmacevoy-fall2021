@@ -1,9 +1,17 @@
 #pragma once
 
-#include <string>
-#include <map>
+#include "port.h"
 
-struct VM {
-  double a;
-  std::map<std::string,double> vars;
+#include "ast.h"
+
+class VM {
+ public:
+  typedef std::map<std::string,JSON> Heap;
+  typedef std::stack<JSON> Stack;
+
+  Heap heap;
+  VM();
+  JSON run(AST::Ptr prog);
+ private:
+  void exec(AST::Ptr prog, Stack &stack);
 };
