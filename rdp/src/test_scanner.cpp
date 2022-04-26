@@ -33,10 +33,7 @@ TEST(Scanner,PutBack) {
   }
 }
 
-void bp() {}
-
 TEST(Scanner,Mark) {
-  bp();
   int k = 1;
   Example::Ptr ex = Example::example(k);
 

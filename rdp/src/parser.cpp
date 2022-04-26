@@ -84,6 +84,8 @@ struct RealParser : Parser {
 		});
   }
 
+  // TERMINALS in grammer.
+  
   Token::Ptr NUMBER() { return next(TokenType::number); }
   Token::Ptr LPAREN() { return next(TokenType::lparen); }
   Token::Ptr RPAREN() { return next(TokenType::rparen); }
@@ -103,8 +105,17 @@ struct RealParser : Parser {
   Token::Ptr STORE() { return KEYWORD("S"); }
   Token::Ptr RECALL() { return KEYWORD("R"); }
 
+  // all ::= expression END_OF_FILE.
+  // expression :: = term ADD expression | term.
+  // term ::= factor_opt_store TIMES term | factor_opt_store.
+  // factor_opt_store ::= factor STORE | factor.
+  // factor ::= number | recall | LPAREN expression RPAREN.
 
-  // factor = NUMBER
+  // Recursive Decent Parsers work really badly on left-recursive grammars:
+  //   if your gammar could try to match a rule without 
+  //
+  //  expression ::= expression ADD term | term
+
   AST::Ptr factorN() {
     auto m = mark();
     Token::Ptr N;
