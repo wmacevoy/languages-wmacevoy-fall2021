@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# opam switch 4.13
+# eval `opam config env`
+ocaml app.ml
