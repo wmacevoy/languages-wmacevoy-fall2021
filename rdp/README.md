@@ -10,6 +10,7 @@ feature.
   - tokens keep their state as json
   - toJSON() 
   - static builders Token::number() etc. for each TokenType.
+  - use ref-counted shared pointers to simplify managment of tokens.
 - ast abstract syntax tree
   - ast keep a reference token and args as child nodes.
   - toJSON()

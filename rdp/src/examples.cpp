@@ -5,33 +5,14 @@ Example::Example(const std::string &_input,
 		 const AST::Ptr &_ast, const double &_ans)
   : input(_input), tokens(_tokens), ast(_ast), ans(_ans) {}
 
-// SCANNER_INPUT1="(4+5)S*R";
-// PARSER_RESULT1=
-//       *
-//      / \
-//     S   R
-//     |
-//     +
-//    / \
-//   4   5
-
-
-
-// SCANNER_INPUT1="(4+5)S*R";
-// PARSER_RESULT1=
-//       *
-//      / \
-//     S   R
-//     |
-//     +
-//    / \
-//   4   5
-
 Token::Ptr append(std::vector<Token::Ptr> &tokens, Token::Ptr token) {
   tokens.push_back(token);
   return token;
 }
 
+// SCANNER_INPUT1="3.14"
+// PARSER_RESULT1=
+//       3.14
 Example::Ptr ex0() {
   int line=0, col=0;
   std::string input = "3.14";
@@ -45,6 +26,16 @@ Example::Ptr ex0() {
 
   return Example::Ptr(new Example(input,tokens,ast,ans));
 }
+
+// SCANNER_INPUT1="(4+5)S*R";
+// PARSER_RESULT1=
+//       *
+//      / \
+//     S   R
+//     |
+//     +
+//    / \
+//   4   5
 
 Example::Ptr ex1() {
   int line=0, col=0;

@@ -29,7 +29,7 @@ class AST {
   static Ptr recall(Token::Ptr token);
   static Ptr unrecognized(Token::Ptr token);
 
-  typedef std::function<nlohmann::json(const AST &ast)> Jsonify;
+  typedef std::function<JSON (const AST &ast)> Jsonify;
   AST(Token::Ptr _token, const Jsonify &_jsonify);
   AST(Token::Ptr _token, const Jsonify &_jsonify, Ptr arg0);
   AST(Token::Ptr _token, const Jsonify &_jsonify, Ptr arg0, Ptr arg1);
