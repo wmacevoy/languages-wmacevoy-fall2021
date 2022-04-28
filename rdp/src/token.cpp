@@ -36,9 +36,9 @@ TokenType JSONToTokenType(const std::string &jsonTokenType) {
 
 Token::Token() {}
 
-Token::Token(const nlohmann::json &_obj) : obj(_obj) {}
+Token::Token(const JSON &_obj) : obj(_obj) {}
 
-const nlohmann::json& Token::toJSON() const {
+const JSON& Token::toJSON() const {
   return obj;
 }
 
@@ -48,7 +48,7 @@ int Token::getCol() const { return int(obj["col"]); }
 int Token::operator<=>(const Token &to) const { return obj < to.obj ? -1 : (obj== to.obj ? 0 : 1); }
 
 Token::Ptr Token::base(TokenType type, int line, int col) {
-  nlohmann::json obj;
+  JSON obj;
   obj["type"]="token";
   obj["token-type"]=TokenTypeToJSON(type);
   obj["line"]=line;

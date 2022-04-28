@@ -7,7 +7,7 @@ TEST(Token,Identifier) {
   int col = 2;
   std::string id = "x";
   Token::Ptr token = Token::identifier(id,line,col);
-  nlohmann::json obj = token->toJSON();
+  JSON obj = token->toJSON();
 
   ASSERT_EQ(token->getType(),tokenType);
   ASSERT_EQ(token->getLine(), line);
@@ -32,7 +32,7 @@ TEST(Token,Keyword) {
   int col = 2;
   std::string word = "for";
   Token::Ptr token = Token::keyword(word,line,col);
-  nlohmann::json obj = token->toJSON();
+  JSON obj = token->toJSON();
 
   ASSERT_EQ(token->getWord(),word);  
 
@@ -57,7 +57,7 @@ TEST(Token,Number) {
   int col = 2;
   double value = 3.14;
   Token::Ptr token = Token::number(value,line,col);
-  nlohmann::json obj = token->toJSON();
+  JSON obj = token->toJSON();
 
   ASSERT_EQ(token->getType(),tokenType);
   ASSERT_EQ(token->getLine(), line);
@@ -95,7 +95,7 @@ TEST(Token,Simple) {
     default: throw std::range_error("invalid");
     }
 
-    nlohmann::json obj = token->toJSON();
+    JSON obj = token->toJSON();
 
     ASSERT_EQ(token->getType(),tokenType);
     ASSERT_EQ(token->getLine(), line);
@@ -118,7 +118,7 @@ TEST(Token,Unrecognized) {
   int col = 2;
   std::string what = "?#4!!";
   Token::Ptr token = Token::unrecognized(what,line,col);
-  nlohmann::json obj = token->toJSON();
+  JSON obj = token->toJSON();
 
   ASSERT_EQ(token->getType(),tokenType);
   ASSERT_EQ(token->getLine(), line);

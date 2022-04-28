@@ -28,8 +28,8 @@ enum ASTType JSONToASTType(const std::string &jsonASTType) {
   throw std::range_error("invalid ast string");
 }
 
-static nlohmann::json baseJsonify(const AST &ast) {
-  nlohmann::json ans;
+static JSON baseJsonify(const AST &ast) {
+  JSON ans;
   ans["type"]="ast";
   if (ast.token) {
     ans["ast-type"]=TokenTypeToJSON(ast.token->getType());
@@ -46,8 +46,8 @@ static nlohmann::json baseJsonify(const AST &ast) {
   return ans;
 }
 
-static nlohmann::json numberJsonify(const AST &ast) {
-  nlohmann::json ans=baseJsonify(ast);
+static JSON numberJsonify(const AST &ast) {
+  JSON ans=baseJsonify(ast);
   ans["value"]=ast.token->getValue();
   return ans;
 }
@@ -144,7 +144,7 @@ AST::AST(Token::Ptr _token, const AST::Jsonify &_jsonify, AST::Ptr arg0, AST::Pt
   args.at(1)=arg1;  
 }
 
-nlohmann::json AST::toJSON() const {
+JSON AST::toJSON() const {
   return jsonify(*this);
 }
 

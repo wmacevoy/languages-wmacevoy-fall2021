@@ -6,33 +6,33 @@ VM::VM() {
   heap["store"]=0;
 }
 
-void push(VM::Stack &stack, const nlohmann::json &value) {
+void push(VM::Stack &stack, const JSON &value) {
   stack.push(value);
 }
 
-nlohmann::json pop(VM::Stack &stack) {
-  nlohmann::json top = stack.top();
+JSON pop(VM::Stack &stack) {
+  JSON top = stack.top();
   stack.pop();
   return top;
 }
 
-nlohmann::json add(const nlohmann::json &a, const nlohmann::json &b) {
+JSON add(const JSON &a, const JSON &b) {
   return a.get<double>() + b.get<double>();
 }
 
-nlohmann::json sub(const nlohmann::json &a, const nlohmann::json &b) {
+JSON sub(const JSON &a, const JSON &b) {
   return a.get<double>() - b.get<double>();
 }
 
-nlohmann::json times(const nlohmann::json &a, const nlohmann::json &b) {
+JSON times(const JSON &a, const JSON &b) {
   return a.get<double>() * b.get<double>();
 }
 
-nlohmann::json divide(const nlohmann::json &a, const nlohmann::json &b) {
+JSON divide(const JSON &a, const JSON &b) {
   return a.get<double>() / b.get<double>();
 }
 
-nlohmann::json VM::run(AST::Ptr prog) {
+JSON VM::run(AST::Ptr prog) {
   Stack stack;
   exec(prog,stack);
   auto ans = pop(stack);

@@ -11,7 +11,7 @@ TEST(VM,Examples) {
     Example::Ptr ex = Example::example(k);
     
     VM vm;
-    nlohmann::json expect = ex->ans;
+    JSON expect = ex->ans;
     auto result = vm.run(ex->ast);
     ASSERT_EQ(result,expect);
   }

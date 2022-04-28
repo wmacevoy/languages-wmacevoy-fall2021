@@ -37,7 +37,7 @@ class AST {
   ASTType getType() const;
 
   Jsonify jsonify;
-  nlohmann::json toJSON() const;
+  JSON toJSON() const;
   
   Token::Ptr token;
   std::vector<Ptr> args;

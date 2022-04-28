@@ -3,7 +3,7 @@
 
 #include "gtest/gtest.h"
 
-// using json = nlohmann::json;
+// using json = JSON;
 
 TEST(json,string) {
   // https://pspdfkit.com/blog/2021/string-literals-character-   -and-multiplatform-cpp
